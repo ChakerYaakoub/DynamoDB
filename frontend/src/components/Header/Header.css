@@ -1,0 +1,25 @@
+.header {
+  display: flex; /* Use flexbox for layout */
+  justify-content: space-between; /* Space between logo and nav */
+  align-items: center; /* Center items vertically */
+  background-color: #f8f9fa; /* Light background color */
+  padding: 20px; /* Spacing around the header */
+}
+
+.logo {
+  font-size: 24px; /* Logo font size */
+  font-weight: bold; /* Bold logo text */
+  cursor: pointer;
+}
+
+.nav ul {
+  list-style: none; /* Remove bullet points */
+  display: flex; /* Display items in a row */
+  margin: 0; /* Remove default margin */
+  padding: 0; /* Remove default padding */
+}
+
+.nav li {
+  margin-left: 20px; /* Space between nav items */
+  cursor: pointer;
+}

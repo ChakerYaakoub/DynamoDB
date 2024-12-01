@@ -1,0 +1,17 @@
+/* Your CSS styles here */
+.home-buttons {
+  display: flex;
+  justify-content: center;
+  margin: 20px;
+}
+
+.filter-section-inner {
+  display: flex;
+  justify-content: space-between;
+}
+.filter-section-inner select,
+.filter-section-inner button {
+  padding: 5px;
+  font-size: 16px;
+  height: 40px;
+}

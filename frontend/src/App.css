@@ -1,0 +1,245 @@
+:root {
+  --Primary: #ffffff;
+
+  --Secondary: #ebedf0;
+
+  --Tertiary: #2c3f55;
+
+  --Accent-tertiary: #296db1;
+
+  --Accent-Green: #6daa27;
+
+  --Accent-Red: #b3171c;
+
+  --Text-Color: #333333;
+
+  --Text-Opacity: #ababab;
+
+  --Text-Separation: #7c7c7c;
+
+  --ff-poppins: "Poppins", sans-serif;
+  --ff-mulish: "Mulish", sans-serif;
+
+  /* mobile  */
+  --fs-35: 1.2rem;
+  --fs-30: 1.1rem;
+  --fs-25: 12px;
+  --fs-18: 12px;
+  --fs-17: 0.6rem;
+  --fs-13: 0.3rem;
+
+  --fw-800: 800;
+  --fw-700: 700;
+  --fw-600: 600;
+  --fw-500: 500;
+  --fw-400: 400;
+
+  --section-padding: 30px;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+li {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* a,
+img,
+span,
+input,
+button,
+textarea,
+.react-icon {
+  display: block;
+} */
+
+input,
+button,
+textarea {
+  background: none;
+  border: none;
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+html {
+  font-family: var(--ff-mulish);
+  /* font-size: 10px; */
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--Primary);
+  color: var(--Text-Color);
+  /* font-size: 1.6rem; */
+  line-height: 1.75;
+  letter-spacing: 0.2px;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+  height: 2px;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  /* this 2 is new  chaker */
+  max-width: 100%;
+  overflow-x: hidden;
+  /* this 2 is new  chaker */
+}
+
+/* Style the footer */
+footer {
+  margin-top: auto; /* Push the footer to the bottom */
+}
+
+.App {
+  font-family: sans-serif;
+  padding: 0;
+}
+
+.main {
+  margin: 0 1rem;
+  min-height: 80vh;
+}
+header {
+  min-height: 15vh;
+}
+footer {
+  min-height: 15vh;
+}
+
+/*-----------------------------------*\
+  #REUSED STYLE
+\*-----------------------------------*/
+.section {
+  padding-block: var(--section-padding);
+  /* padding-top: var(--section-padding);
+  padding-bottom: 40px; */
+}
+
+.h1,
+.h2,
+.h3 {
+  color: var(--black);
+  font-family: var(--ff-poppins);
+}
+
+.h1 {
+  font-size: var(--fs-25);
+}
+
+.h1,
+.h2 {
+  font-weight: var(--fw-800);
+  text-transform: uppercase;
+}
+
+.h2 {
+  font-size: var(--fs-18);
+  line-height: 1.2;
+}
+
+.h1,
+.h3 {
+  line-height: 1.4;
+}
+
+.h3 {
+  font-size: var(--fs-18);
+}
+
+.iconInput {
+  color: var(--Text-Opacity);
+}
+
+/*-----------------------------------*\
+  #MEDIA QUERIES
+\*-----------------------------------*/
+
+/**
+ * responsive for larger than 576px screen
+ */
+
+@media (min-width: 768px) {
+  /**
+   * CUSTOM PROPERTY
+   */
+
+  :root {
+    /**
+     * typography
+     */
+
+    --fs-30: 2.5rem;
+    --fs-25: 1.5rem;
+    --fs-18: 1.2rem;
+  }
+
+  /**
+   * REUSED STYLE
+   */
+
+  .h3 {
+    --fs-18: 2rem;
+  }
+
+  .main {
+    margin: 0 3rem;
+  }
+}
+
+/**
+ * responsive for larger than 992px screen
+ */
+@media (min-width: 992px) {
+  /**
+   * CUSTOM PROPERTY
+   */
+
+  :root {
+    /**
+     * typography
+     */
+
+    --fs-35: 4.5rem;
+
+    /**
+     * spacing
+     */
+
+    /* --section-padding: 120px; */
+    /* --section-padding: 90px; */
+
+    --section-padding: 40px;
+  }
+}
+
+/**
+ * responsive for larger than 1200px screen
+ */
+
+@media (min-width: 1200px) {
+  /**
+   * REUSED STYLE
+   */
+}
