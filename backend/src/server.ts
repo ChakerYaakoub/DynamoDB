@@ -14,9 +14,10 @@ import bodyParser from "body-parser";
 import { v4 as uuidv4 } from "uuid"; // Import UUID
 import dotenv from "dotenv";
 
-dotenv.config();
+// to run the server :
+//==>  npx ts-node src/server.ts
 
-// npx ts-node src/server.ts
+dotenv.config();
 
 const app = express();
 app.use(cors());
@@ -41,6 +42,8 @@ interface Student {
   Description: string;
   DateOfBirth: string;
 }
+
+// --------------------------------- Create Table ---------------------------------
 
 // Function to create the Students table if it doesn't exist
 const createTableIfNotExists = async () => {
@@ -87,7 +90,9 @@ const createTableIfNotExists = async () => {
 // Call the function to ensure the table exists
 createTableIfNotExists();
 
-// Fetch All Students
+// --------------------------------- Routes ---------------------------------
+
+// ------ Fetch All Students ------
 app.get("/students", async (req: Request, res: Response) => {
   const params = { TableName: "Students" };
 
@@ -100,7 +105,7 @@ app.get("/students", async (req: Request, res: Response) => {
     res.status(500).json({ error: "Could not load students" });
   }
 });
-// get student by id
+// ------ get student by id ------
 app.get("/students/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
   const params = {
@@ -116,7 +121,7 @@ app.get("/students/:id", async (req: Request, res: Response) => {
   }
 });
 
-// Add a Student
+// ------ Add a Student ------
 app.post("/students", async (req: Request, res: Response) => {
   const student: Student = {
     ...req.body,
@@ -137,7 +142,7 @@ app.post("/students", async (req: Request, res: Response) => {
   }
 });
 
-// Update a Student
+// ------ Update a Student ------
 app.put("/students/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
   const updatedStudent: Partial<Student> = req.body; // Use Partial<Student> for updates
@@ -168,7 +173,7 @@ app.put("/students/:id", async (req: Request, res: Response) => {
   }
 });
 
-// Delete a Student
+// ------ Delete a Student ------
 app.delete("/students/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
 
@@ -186,32 +191,7 @@ app.delete("/students/:id", async (req: Request, res: Response) => {
   }
 });
 
-// Search Students by Attribute
-// @ts-ignore
-app.get("/students/search", async (req: Request, res: Response) => {
-  const { attribute, value } = req.query;
-
-  if (!attribute || !value) {
-    return res.status(400).json({ error: "Attribute and value are required" });
-  }
-
-  const params = {
-    TableName: "Students",
-    FilterExpression: `contains(#attr, :value)`,
-    ExpressionAttributeNames: { "#attr": String(attribute) },
-    ExpressionAttributeValues: { ":value": String(value) },
-  };
-
-  try {
-    const data = await docClient.send(new ScanCommand(params));
-    res.json(data.Items);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Could not search students" });
-  }
-});
-
-// Search Students by Specialization
+// ------ Search Students by Specialization ------
 // @ts-ignore
 app.get(
   "/students/specialization/:specialization",
@@ -245,6 +225,7 @@ app.get(
   }
 );
 
+// --------------------------------- Server ---------------------------------
 const PORT = 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
