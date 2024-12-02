@@ -39,8 +39,8 @@ interface Student {
   Name: string;
   Specialization: string;
   Email: string;
-  Description: string;
-  DateOfBirth: string;
+  Description?: string;
+  DateOfBirth?: string;
 }
 
 // --------------------------------- Create Table ---------------------------------
@@ -124,7 +124,11 @@ app.get("/students/:id", async (req: Request, res: Response) => {
 // ------ Add a Student ------
 app.post("/students", async (req: Request, res: Response) => {
   const student: Student = {
-    ...req.body,
+    Name: req.body.Name || "",
+    Email: req.body.Email || "",
+    Specialization: req.body.Specialization || "",
+    Description: req.body.Description || "",
+    DateOfBirth: req.body.DateOfBirth || "",
     StudentID: uuidv4(), // Generate a new StudentID
   };
 
@@ -135,6 +139,7 @@ app.post("/students", async (req: Request, res: Response) => {
 
   try {
     await docClient.send(new PutCommand(params));
+    console.log("add student :", student.StudentID);
     res.status(201).json({ message: "Student added successfully" });
   } catch (err) {
     console.error(err);
@@ -157,8 +162,8 @@ app.put("/students/:id", async (req: Request, res: Response) => {
       ":name": updatedStudent.Name,
       ":specialization": updatedStudent.Specialization,
       ":email": updatedStudent.Email,
-      ":description": updatedStudent.Description,
-      ":dateOfBirth": updatedStudent.DateOfBirth,
+      ":description": updatedStudent.Description || "",
+      ":dateOfBirth": updatedStudent.DateOfBirth || "",
     },
     ReturnValues: "UPDATED_NEW",
   };
@@ -166,6 +171,7 @@ app.put("/students/:id", async (req: Request, res: Response) => {
   try {
     // @ts-ignore
     const data = await docClient.send(new UpdateCommand(params));
+    console.log("update student :", id);
     res.json(data.Attributes);
   } catch (err) {
     console.error(err);
@@ -184,6 +190,7 @@ app.delete("/students/:id", async (req: Request, res: Response) => {
 
   try {
     await docClient.send(new DeleteCommand(params));
+    console.log("delete student :", id);
     res.status(200).json({ message: "Student deleted successfully" });
   } catch (err) {
     console.error(err);
@@ -216,6 +223,7 @@ app.get(
     try {
       const data = await docClient.send(new QueryCommand(params));
       res.json(data.Items || []); // Return empty array if no items found
+      console.log("search students by specialization :", specialization);
     } catch (err) {
       console.error(err);
       res

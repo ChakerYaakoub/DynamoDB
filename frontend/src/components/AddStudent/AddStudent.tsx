@@ -55,7 +55,9 @@ const AddStudent: React.FC = () => {
       <h1>Add a New Student</h1>
 
       <form onSubmit={handleSubmit}>
-        <label>Name </label>
+        <label>
+          Name <span className="required"> *</span>{" "}
+        </label>
         <input
           type="text"
           name="Name"
@@ -63,14 +65,27 @@ const AddStudent: React.FC = () => {
           onChange={handleChange}
           required
         />
+        <label>
+          Email <span className="required"> *</span>{" "}
+        </label>
+        <input
+          type="email"
+          name="Email"
+          value={newStudent.Email}
+          onChange={handleChange}
+          required
+        />
 
-        <label>Specialization </label>
+        <label>
+          Specialization <span className="required"> *</span>{" "}
+        </label>
         <select
           name="Specialization"
           value={newStudent.Specialization}
           onChange={handleChange}
           required
         >
+          <option value="">Select Specialization</option>
           {specializations.map((spec) => (
             <option key={spec.value} value={spec.value}>
               {spec.label}
@@ -78,14 +93,14 @@ const AddStudent: React.FC = () => {
           ))}
         </select>
 
-        <label>Description </label>
+        <label>Description (optional) </label>
         <textarea
           name="Description"
           value={newStudent.Description}
           onChange={handleChange}
         />
 
-        <label>Date of Birth </label>
+        <label>Date of Birth (optional) </label>
         <input
           type="date"
           name="DateOfBirth"

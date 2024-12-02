@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "./Edit.css";
 import { EditProps, useEdit } from "./useEdit";
 import { useParams } from "react-router-dom";
@@ -20,16 +20,20 @@ const Edit: React.FC = (props: EditProps) => {
     { value: "Back End Developer", label: "Back End Developer" },
   ];
 
-  useEffect(() => {
-    axios
-      .get(`http://localhost:5000/students/${id}`)
-      .then((response) => {
-        setStudent(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching student:", error);
-      });
+  const fetchStudent = useCallback(async () => {
+    if (!id) return;
+
+    try {
+      const response = await axios.get(`http://localhost:5000/students/${id}`);
+      setStudent(response.data);
+    } catch (error) {
+      console.error("Error fetching student:", error);
+    }
   }, [id]);
+
+  useEffect(() => {
+    fetchStudent();
+  }, [fetchStudent]);
 
   const handleChange = (
     e: React.ChangeEvent<

@@ -36,3 +36,11 @@ button {
 button:hover {
   background-color: #0056b3;
 }
+
+.required {
+  color: red;
+}
+
+label {
+  font-weight: bold;
+}

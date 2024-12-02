@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "./Home.css";
 import { HomeProps, useHome } from "./useHome";
 import StudentList from "../../components/StudentList/StudentList";
@@ -12,36 +12,34 @@ const Home: React.FC = (props: HomeProps) => {
   const [selectedSpecialization, setSelectedSpecialization] = useState("");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    fetchStudents();
-  }, []);
-
-  const fetchStudents = async (specialization?: string) => {
+  const fetchStudents = useCallback(async (specialization?: string) => {
     try {
       let url = "http://localhost:5000/students";
 
       if (specialization) {
-        // Need to encode the specialization to handle spaces and special characters
         const encodedSpecialization = encodeURIComponent(specialization);
         url = `http://localhost:5000/students/specialization/${encodedSpecialization}`;
       }
       console.log(url);
 
       const response = await axios.get(url);
-      setStudents(response.data || []); // Handle both empty array and null/undefined
+      setStudents(response.data || []);
     } catch (error) {
       console.error("Error fetching students:", error);
-      setStudents([]); // Reset students on error
+      setStudents([]);
     }
-  };
+  }, []);
 
-  const handleSpecializationChange = (
-    e: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    const value = e.target.value;
-    setSelectedSpecialization(value);
-    fetchStudents(value);
-  };
+  useEffect(() => {
+    fetchStudents(selectedSpecialization);
+  }, [selectedSpecialization, fetchStudents]);
+
+  const handleSpecializationChange = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      setSelectedSpecialization(e.target.value);
+    },
+    []
+  );
 
   const specializations = [
     { value: "", label: "All Specializations" },
@@ -49,6 +47,10 @@ const Home: React.FC = (props: HomeProps) => {
     { value: "Front End Developer", label: "Front End Developer" },
     { value: "Back End Developer", label: "Back End Developer" },
   ];
+
+  const handleNavigate = useCallback(() => {
+    navigate("/Add");
+  }, [navigate]);
 
   return (
     <div className="home-container">
@@ -65,7 +67,7 @@ const Home: React.FC = (props: HomeProps) => {
               </option>
             ))}
           </select>
-          <button onClick={() => navigate("/Add")} className="add-button">
+          <button onClick={handleNavigate} className="add-button">
             Add New Student
           </button>
         </div>
