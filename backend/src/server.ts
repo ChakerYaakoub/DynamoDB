@@ -11,7 +11,7 @@ import {
 } from "@aws-sdk/lib-dynamodb";
 import cors from "cors";
 import bodyParser from "body-parser";
-import { v4 as uuidv4 } from "uuid"; // Import UUID
+import { v4 as uuidv4 } from "uuid";
 import dotenv from "dotenv";
 
 // to run the server :
@@ -50,6 +50,8 @@ const createTableIfNotExists = async () => {
   const params = {
     TableName: "Students",
     KeySchema: [{ AttributeName: "StudentID", KeyType: "HASH" }], // Partition key
+    // we dont to define a sort key b
+
     AttributeDefinitions: [
       { AttributeName: "StudentID", AttributeType: "S" }, // String type
       { AttributeName: "Specialization", AttributeType: "S" }, // Add Specialization attribute
@@ -57,10 +59,12 @@ const createTableIfNotExists = async () => {
       //   { AttributeName: "Description", AttributeType: "S" },
       //   { AttributeName: "DateOfBirth", AttributeType: "S" },
     ],
+    // read and write capacity units par second
     ProvisionedThroughput: {
       ReadCapacityUnits: 5,
       WriteCapacityUnits: 5,
     },
+    // Global Secondary Index
     GlobalSecondaryIndexes: [
       {
         IndexName: "SpecializationIndex", // Name of the GSI
@@ -73,6 +77,9 @@ const createTableIfNotExists = async () => {
       },
     ],
   };
+  // Local Secondary Index (LSI) vs Global Secondary Index (GSI):
+  // LSI: Allows querying on a different sort key while using the same partition key. Sort key is required.
+  // GSI: Allows querying on a different partition key and sort key is optional. It provides more flexibility in querying.
 
   try {
     // @ts-ignore
@@ -157,6 +164,8 @@ app.put("/students/:id", async (req: Request, res: Response) => {
     Key: { StudentID: id },
     UpdateExpression:
       "set #name = :name, Specialization = :specialization, Email = :email, Description = :description, DateOfBirth = :dateOfBirth",
+    // ExpressionAttributeNames it is required because Name is a reserved keyword in DynamoDB.
+    // others ex : first-name , last-name .. ( - ) its a reserved keyword in DynamoDB.
     ExpressionAttributeNames: { "#name": "Name" },
     ExpressionAttributeValues: {
       ":name": updatedStudent.Name,
@@ -211,11 +220,17 @@ app.get(
     }
 
     const decodedSpecialization = decodeURIComponent(specialization);
+    // decodeURIComponent is used to decode the special characters in the specialization
+    // example : %20 is a space in the URL
+    // ex : http://localhost:5000/students/specialization/Full-Stack%20Development
+    // will be decoded to : Full-Stack Development
 
     const params = {
       TableName: "Students",
       IndexName: "SpecializationIndex",
+      //The KeyConditionExpression specifies the condition for querying items in a DynamoDB table or index.
       KeyConditionExpression: "#spec = :specialization",
+      // The ExpressionAttributeNames maps placeholder tokens (e.g., #spec) to actual attribute names in the DynamoDB table
       ExpressionAttributeNames: { "#spec": "Specialization" },
       ExpressionAttributeValues: { ":specialization": decodedSpecialization },
     };
